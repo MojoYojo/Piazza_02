@@ -20,6 +20,13 @@ namespace Piazza_02
 
             definingMinPrimeNumberFromFileNumbers(Console.ReadLine());
 
+            DirectoryInfo d = new DirectoryInfo(@Console.ReadLine());
+
+            if (d.Exists)
+            {
+                consoleFilesExplore(d);
+            }
+
             Console.ReadKey();
         }
 
@@ -182,5 +189,74 @@ namespace Piazza_02
             fs.Close();
             rd.Close();
         }
+
+        static List<DirectoryInfo> previousDirectories = new List<DirectoryInfo>();
+        static bool escIsPressed = false;
+        public static void consoleFilesExplore(DirectoryInfo d)
+        {
+            if (escIsPressed)
+            {
+                previousDirectories.RemoveAt(previousDirectories.Count - 1);
+            }
+
+            Console.Clear();
+
+            try
+            {
+                DirectoryInfo[] directories = d.GetDirectories();
+                int current = 0;
+                while (true)
+                {
+                    for(int i=0;i<directories.Length;i++)
+                    {
+                        if(current == i)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine(directories[i].Name);
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine(directories[i].Name);
+
+                        }
+                    }
+                    ConsoleKeyInfo pressedButton = Console.ReadKey();
+                    if (pressedButton.Key == ConsoleKey.UpArrow)
+                    {
+                        current--;
+                        if (current < 0)
+                            current = directories.Length - 1;
+                    }
+                    else if (pressedButton.Key == ConsoleKey.DownArrow)
+                    {
+                        current++;
+                        if (current > directories.Length - 1)
+                            current = 0;
+                    }
+                    else if (pressedButton.Key == ConsoleKey.Enter)
+                    {
+                        escIsPressed = false;
+                        previousDirectories.Add(d);
+                        consoleFilesExplore(directories[current]);
+                    }
+                    else if (pressedButton.Key == ConsoleKey.Escape)
+                    {
+                        if(previousDirectories.Count != 0)
+                        {
+                            escIsPressed = true;
+                            consoleFilesExplore(previousDirectories[previousDirectories.Count-1]);
+                        }
+                    }
+                    Console.Clear();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadKey();
+            }
+        }
+
     }
 }
