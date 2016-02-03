@@ -17,7 +17,9 @@ namespace Piazza_02
             stackBasedIteration(Console.ReadLine());
 
             readMinAndMaxNumbersFromFile(Console.ReadLine());
-                
+
+            definingMinPrimeNumberFromFileNumbers(Console.ReadLine());
+
             Console.ReadKey();
         }
 
@@ -130,6 +132,53 @@ namespace Piazza_02
                     min = num;
             }
             Console.WriteLine("Min number is " + min + ", Max number is " + max);
+            fs.Close();
+            rd.Close();
+        }
+
+        public static void definingMinPrimeNumberFromFileNumbers(string path) {
+            Console.WriteLine("\nFinding of min prime number from the list of numbers:");
+
+            FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            StreamReader rd = new StreamReader(fs);
+            string[] stringNumbers = rd.ReadLine().Split(' ');
+            int[] numbers = new int[stringNumbers.Length];
+             
+            for (int i=0;i<stringNumbers.Length;i++)
+            {
+                numbers[i] = int.Parse(stringNumbers[i]);
+            }
+
+            //Defining Prime numbers from the list
+            int[] primeNumbers = new int[numbers.Length];
+            int count = 0;
+            foreach (int number in numbers)
+            {
+                int numberOfDivisors = 0;
+                for (int i=2;i<=number;i++)
+                {
+                    if(number % i == 0) 
+                        numberOfDivisors++;
+                    if (numberOfDivisors > 1)
+                        break;
+                }
+                if (numberOfDivisors == 1)
+                {
+                    primeNumbers[count] = number;
+                    count++;
+                }
+
+            }
+
+            int min = primeNumbers[0];
+            
+            for (int i=1;i<count;i++)
+            {
+                if (primeNumbers[i] < min)
+                    min = primeNumbers[i];
+            }
+            
+            Console.WriteLine("Min prime number is " + min);
             fs.Close();
             rd.Close();
         }
