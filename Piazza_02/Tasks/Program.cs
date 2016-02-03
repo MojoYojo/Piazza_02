@@ -8,19 +8,20 @@ using System.Threading.Tasks;
 namespace Piazza_02
 {
 
-    public class StackBasedIteration
+    public class Programs
     {
         static void Main(string[] args)
         {
             // Specify the starting folder on the command line, or in 
             // Visual Studio in the Project > Properties > Debug pane.
-            TraverseTree(Console.ReadLine());
+            stackBasedIteration(Console.ReadLine());
 
-            Console.WriteLine("Press any key");
+            readMinAndMaxNumbersFromFile(Console.ReadLine());
+                
             Console.ReadKey();
         }
 
-        public static void TraverseTree(string root)
+        public static void stackBasedIteration(string root)
         {
             // Data structure to hold names of subfolders to be
             // examined for files.
@@ -103,6 +104,34 @@ namespace Piazza_02
                 foreach (string str in subDirs)
                     dirs.Push(str);
             }
+        }
+
+        public static void readMinAndMaxNumbersFromFile(string path)
+        {
+            Console.WriteLine("\nFinding of min and max numbers:");
+
+            FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            StreamReader rd = new StreamReader(fs);
+            string[] numbers = rd.ReadLine().Split(' ');
+            int min = 0, max = 0;
+            bool activated = false;
+            foreach (string number in numbers)
+            {
+                int num = int.Parse(number);
+                if (!activated)
+                {
+                    min = num;
+                    max = num;
+                    activated = true;
+                }
+                if (num > max)
+                    max = num;
+                if (num < min)
+                    min = num;
+            }
+            Console.WriteLine("Min number is " + min + ", Max number is " + max);
+            fs.Close();
+            rd.Close();
         }
     }
 }
